@@ -1,6 +1,6 @@
 const express = require("express"); // importa lib do Express
 const sqlite3 = require("sqlite3"); // Importa lib do sqlite3
-const bodyParser = require("body-parser"); // Importa o body-parser
+const bodyParser = require("body-parser"); // Importa o body-parser se vc usar o Express <= 4
 const session = require("express-session"); // Importa 0 express-session
 
 const PORT = 9000; // Porta TCP do servidor HTTP da aplicação
@@ -46,7 +46,8 @@ app.use(
 app.use("/static", express.static(__dirname + "/static"));
 
 // Middleware para processar as requisições do Body Parameters do cliente
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true })); // Para versão menor ou igual a 4 do Express
+app.use(express.urlencoded({ extended: true })); // Para Express 5+
 
 // Configurar EJS como o motor de visualização
 app.set("view engine", "ejs");
