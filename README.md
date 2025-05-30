@@ -65,14 +65,14 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
 ├── views               # Arquivos de modelo/template usados pelo ExpressJS
 │   ├── pages               # Páginas
 │   └── partials            # Fragmentos de código parciais
-├── README.md
-├── app.js                  # Aplicação principal
+├── README.md           # Arquivo de apresentação do projeto - Este arquivo
+├── app.js              # Aplicação principal
 ├── eslint.config.mjs
-├── helloworld.js           # Apliativo inicial Hello World do Node
+├── helloworld.js       # Aplicativo inicial Hello World do Node
 ├── package-lock.json
 ├── package.json
-├── rotas.js                # Aplicativo de exemplo de rotas no ExpressJS
-└── user.db                 # Arquivo de banco de dados do SQLite3
+├── rotas.js            # Aplicativo de exemplo de uso de rotas no ExpressJS
+└── user.db             # Arquivo de banco de dados do SQLite3
 ```
 
 ## 📝 Lista de Tarefas (To-Do)
