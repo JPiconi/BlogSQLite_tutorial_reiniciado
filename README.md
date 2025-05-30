@@ -53,6 +53,27 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
 5.  **Acesse a aplicação:**
     Abra seu navegador e acesse `http://localhost:3000` (ou a porta configurada no `app.js`).
 
+## 📂 Estrutura do Projeto
+
+```
+.
+├── public/                 # Arquivos estáticos (CSS, JS cliente, imagens)
+│   └── css/
+│       └── style.css
+├── routes/                 # Definições das rotas da aplicação
+│   └── posts.js
+├── views/                  # Arquivos de template EJS
+│   ├── edit-post.ejs
+│   ├── index.ejs
+│   ├── new-post.ejs
+│   └── view-post.ejs
+├── .gitignore
+├── app.js                  # Arquivo principal da aplicação Express
+├── database.js             # Configuração e inicialização do banco de dados SQLite
+├── package-lock.json
+├── package.json
+└── README.md
+```
 
 ## 📝 Lista de Tarefas (To-Do)
 
