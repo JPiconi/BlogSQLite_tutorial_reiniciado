@@ -57,6 +57,7 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
 
 ```
 .
+├── Exercicios          # Arquivos de exercícios para ensino de nodejs
 ├── static              # Arquivos estáticos do projeto
 │   ├── fonts               # Fontes
 │   ├── images              # Imagens
