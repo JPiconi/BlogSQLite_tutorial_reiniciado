@@ -57,22 +57,22 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
 
 ```
 .
-├── public/                 # Arquivos estáticos (CSS, JS cliente, imagens)
-│   └── css/
-│       └── style.css
-├── routes/                 # Definições das rotas da aplicação
-│   └── posts.js
-├── views/                  # Arquivos de template EJS
-│   ├── edit-post.ejs
-│   ├── index.ejs
-│   ├── new-post.ejs
-│   └── view-post.ejs
-├── .gitignore
-├── app.js                  # Arquivo principal da aplicação Express
-├── database.js             # Configuração e inicialização do banco de dados SQLite
+├── static
+│   ├── fonts
+│   ├── images
+│   ├── scripts
+│   └── styles
+├── views
+│   ├── pages
+│   └── partials
+├── README.md
+├── app.js
+├── eslint.config.mjs
+├── helloworld.js
 ├── package-lock.json
 ├── package.json
-└── README.md
+├── rotas.js
+└── user.db
 ```
 
 ## 📝 Lista de Tarefas (To-Do)
