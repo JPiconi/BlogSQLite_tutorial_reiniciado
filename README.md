@@ -1,5 +1,8 @@
 # Projeto Blog com SQLite, Nodejs, ExpressJS
 
+### Sobre o projeto
+• É um blog com espaço para adição de informações, inscrição de novos usuários e acesso aos já cadastrados. O site possuí criptografia e memória de forma que os logados se encontrem na página de usuários (dashboard).
+
 ### Execução
 1 - Clonar o repositório <br>
 • cd <local onde a o repositório será salvo> <br>
@@ -21,6 +24,6 @@
 • Linux Ubuntu <br>
 • Windows 10 <br>
 
-### Autor 
+### Autor
 • Código: Macio Denadai <br>
 • README: Sarah Nicole Geraldo <br>
