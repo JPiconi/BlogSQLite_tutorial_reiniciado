@@ -59,6 +59,7 @@ const sobre = "sobre";
 const login = 'Vc está na página "Login"<br><a href="/">Voltar</a>';
 const cadastro = 'Vc está na página "Cadastro"<br><a href="/">Voltar</a>';
 
+
 /* Método express.get necessita de dois parâmetros 
  Na ARROW FUNCTION, o primeiro são os dados do servidor (REQUISITION - 'req')
  o segundo, são os dados que serão enviados ao cliente (RESULT - 'res') */
@@ -74,7 +75,9 @@ app.get("/", (req, res) => {
   };
 
   // config.rodape = "1";
-  res.render("pages/index", { titulo: config.titulo, req: req });
+  // res.render("pages/index", { titulo: config.titulo, req: req });
+  // console.log({ ...config, req: req });
+  res.render("pages/index", { ...config, req: req });
   // res.redirect("/cadastro"); // Redireciona para a ROTA cadastro
 });
 
@@ -87,7 +90,7 @@ app.get("/usuarios", (req, res) => {
     // res.send("Lista de usuários.");
     // config.dados = row;
     // console.log(JSON.stringify(config.dados));
-    res.render("partials/usertable", { titulo: "USUÁRIOS", dados: row, req: req });
+    res.render("partials/usertable", { ...config, dados: row, req: req });
   });
 });
 
@@ -121,7 +124,7 @@ app.post("/cadastro", (req, res) => {
     if (row) {
       // A variável 'row' irá retornar os dados do banco de dados,
       // executado através do SQL, variável query
-      res.send("Usuário já cadastrado, refaça o cadastro");
+      res.redirect("/register_failed");
     } else {
       // 3. Se usuário não existe no banco cadastrar
       const insertQuery =
@@ -132,15 +135,11 @@ app.post("/cadastro", (req, res) => {
         (err) => {
           // Inserir a lógica do INSERT
           if (err) throw err;
-          res.send("Usuário cadastrado, com sucesso");
+          res.redirect("/login");
         }
       );
     }
   });
-
-  // res.send(
-  //   `Bem-vindo usuário: ${req.body.username}, seu email é ${req.body.email}`
-  // );
 });
 
 // Pregramação de rotas do método GET do HTTP 'app.get()'
@@ -151,6 +150,7 @@ app.get("/sobre", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+  console.log("GET /logout")
   // Exemplo de uma rota (END POINT) controlado pela sessão do usuário logado.
   req.session.destroy(() => {
     res.redirect("/");
@@ -161,6 +161,16 @@ app.get("/login", (req, res) => {
   console.log("GET /login");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/info
   res.render("pages/login", { titulo: "LOGIN", req: req });
+});
+
+app.get("/register_failed", (req, res) => {
+  console.log("GET /register_failed");
+  res.render("pages/fail", { ...config, req: req, msg: "<a href='/cadastro'>Cadastro inválido</a>" });
+});
+
+app.get("/invalid_login", (req, res) => {
+  console.log("GET /invalid_login");
+  res.render("pages/fail", { ...config, req: req, msg: "Usuário e senha inválida!!!" });
 });
 
 app.post("/login", (req, res) => {
@@ -179,17 +189,13 @@ app.post("/login", (req, res) => {
       res.redirect("/dashboard");
     } // Se não, envia mensagem de erro (Usuário inválido)
     else {
-      res.send("Usuário inválido.");
+      res.redirect("/invalid_login");
     }
   });
 });
 
-// app.get("/teste", (res, req) => {
-//   res.redirect("/usuarios")
-// });
-
 app.get("/dashboard", (req, res) => {
-  console.log("GET /dashboard");
+  console.log("GET /dashboard", req.status);
   console.log(JSON.stringify(config));
 
   if (req.session.loggedin) {
@@ -201,6 +207,11 @@ app.get("/dashboard", (req, res) => {
     console.log("Tentativa de acesso a àrea restrita");
     res.redirect("/");
   }
+});
+
+app.use('*', (req, res) => {
+  // Envia uma resposta de erro 404
+  res.status(404).render('pages/fail', { titulo: "ERRO 404", req: req, msg: "404" });
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
