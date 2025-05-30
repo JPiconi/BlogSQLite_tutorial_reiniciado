@@ -80,6 +80,22 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
 Aqui estão algumas sugestões de melhorias e funcionalidades futuras para o projeto:
 
 ### Funcionalidades Essenciais e Melhorias
+*   [ ] **Implementar/Revisar Registro de Posts:**
+    *   [ ] Criar a rota e o controller para exibir o formulário de novo post (`GET /new-post`).
+    *   [ ] Criar a view EJS para o formulário de novo post (`new-post.ejs`).
+    *   [ ] Criar a rota e o controller para processar o envio do formulário e salvar o post no banco de dados (`POST /posts`).
+*   [ ] **Implementar/Revisar Visualização de Posts:**
+    *   [ ] Criar a rota e o controller para listar todos os posts na página inicial (`GET /`).
+    *   [ ] Criar a view EJS para exibir a lista de posts (`index.ejs`).
+    *   [ ] Criar a rota e o controller para visualizar um post individual pelo seu ID (`GET /post/:id`).
+    *   [ ] Criar a view EJS para exibir um post individual (`view-post.ejs`).
+*   [ ] **Implementar/Revisar Edição de Posts:**
+    *   [ ] Criar a rota e o controller para exibir o formulário de edição de um post (`GET /edit-post/:id`).
+    *   [ ] Criar a view EJS para o formulário de edição (`edit-post.ejs`), pré-preenchida com os dados do post.
+    *   [ ] Criar a rota e o controller para processar a atualização do post no banco de dados (`POST /edit-post/:id`).
+*   [ ] **Implementar/Revisar Exclusão de Posts:**
+    *   [ ] Criar a rota e o controller para deletar um post do banco de dados (`POST /delete-post/:id` ou `DELETE /posts/:id`).
+    *   [ ] Adicionar confirmação antes de excluir.
 *   [ ] **Melhorar o Design/Estilização (CSS):**
     *   [ ] Aplicar um framework CSS (Bootstrap, Tailwind CSS) ou criar um estilo mais elaborado.
     *   [ ] Tornar o layout responsivo.
