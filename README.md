@@ -57,22 +57,22 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
 
 ```
 .
-├── static
-│   ├── fonts
-│   ├── images
-│   ├── scripts
-│   └── styles
-├── views
-│   ├── pages
-│   └── partials
+├── static              # Arquivos estáticos do projeto
+│   ├── fonts               # Fontes
+│   ├── images              # Imagens
+│   ├── scripts             # Scripts de Front-end
+│   └── styles              # Estilos CSS
+├── views               # Arquivos de modelo/template usados pelo ExpressJS
+│   ├── pages               # Páginas
+│   └── partials            # Fragmentos de código parciais
 ├── README.md
-├── app.js
+├── app.js                  # Aplicação principal
 ├── eslint.config.mjs
-├── helloworld.js
+├── helloworld.js           # Apliativo inicial Hello World do Node
 ├── package-lock.json
 ├── package.json
-├── rotas.js
-└── user.db
+├── rotas.js                # Aplicativo de exemplo de rotas no ExpressJS
+└── user.db                 # Arquivo de banco de dados do SQLite3
 ```
 
 ## 📝 Lista de Tarefas (To-Do)
