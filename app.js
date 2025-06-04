@@ -122,12 +122,8 @@ app.post("/cadastro", (req, res) => {
     if (row) {
       // A variável 'row' irá retornar os dados do banco de dados,
       // executado através do SQL, variável query
-<<<<<<< HEAD
       res.json({ error: "Usuário já cadastrado, refaça o cadastro" });
       // res.send("Usuário já cadastrado, refaça o cadastro);
-=======
-      res.redirect("/register_failed");
->>>>>>> 11937735efcc0264cee529c0119083a39f38aef4
     } else {
       // 3. Se usuário não existe no banco cadastrar
       const insertQuery =
@@ -178,27 +174,6 @@ app.get("/invalid_login", (req, res) => {
 
 app.post("/login", (req, res) => {
   console.log("POST /login");
-<<<<<<< HEAD
-  // Linha para depurar se esta vindo dados no req.body
-  !req.body
-    ? console.log(`Body vazio: ${req.body}`)
-    : console.log(JSON.stringify(req.body));
-  const { username, password } = req.body;
-  
-  const query = "SELECT * FROM users WHERE username=? AND password=?";
-  db.get(query, [username, password], (err, row) => {
-    if (err) throw err;
-    console.log(`${JSON.stringify(row)}`);
-    if (row) {
-      // A variável 'row' irá retornar os dados do banco de dados,
-      // executado através do SQL, variável query
-      res.send(`<pre>Login realizado com sucesso!<br>${JSON.stringify(row, 2)}</pre>`);
-    } else {
-      res.send("Usuário não encontrado!");
-    }
-  });
-  // res.send("Login ainda não implementado.");
-=======
   const { username, password } = req.body;
 
   // Consultar o usuario no banco de dados
@@ -236,7 +211,6 @@ app.get("/dashboard", (req, res) => {
 app.use('*', (req, res) => {
   // Envia uma resposta de erro 404
   res.status(404).render('pages/fail', { titulo: "ERRO 404", req: req, msg: "404" });
->>>>>>> 11937735efcc0264cee529c0119083a39f38aef4
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
