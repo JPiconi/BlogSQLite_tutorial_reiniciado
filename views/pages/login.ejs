@@ -1,18 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Formulário de Cadastro</title>
-
-    <!-- LINK CSS -->
-    <link rel="stylesheet" href="./static/styles/styles.css" />
-
-    <!-- LINK JAVASCRIPT -->
-    <!-- <script src="./static/scripts/validaCadastro.js" defer></script> -->
-  </head>
+  <%- include("../partials/head"); %>
   <body>
-    <%- include('menu'); %>
+    <%- include('../partials/menu'); %>
 
     <div class="container_rain">
       <span class="cloud"></span>
@@ -40,35 +30,10 @@
           <label>Nome</label>
         </div>
 
-        <!-- <div class="input_data">
-          <input type="email" id="email" required />
-          <label>Email</label>
-        </div> -->
-
         <div class="input_data">
           <input type="password" id="senha" name="password" required />
           <label>Senha</label>
         </div>
-
-        <!-- <div class="input_data">
-          <input type="password" id="confirmarSenha" required />
-          <label>Confirmar Senha</label>
-        </div> -->
-
-        <!-- <div class="input_data">
-          <input type="tel" id="celular" maxlength="15" required />
-          <label>Celular</label>
-        </div>
-
-        <div class="input_data">
-          <input type="text" id="cpf" required />
-          <label>CPF</label>
-        </div>
-
-        <div class="input_data">
-          <input type="text" id="rg" required />
-          <label>RG</label>
-        </div> -->
 
         <div class="btnArea">
           <p class="msgError"></p>
@@ -76,6 +41,6 @@
         </div>
       </form>
     </section>
-    <%- include("footer") %>
+    <%- include("../partials/footer") %>
   </body>
 </html>
