@@ -84,8 +84,13 @@ footer p {
 }
 
 table {
-  /* font-size: 24px; */
-  width: 100vh;
+  font-size: 24px;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  overflow-y: scroll;
 }
 
 tr,
