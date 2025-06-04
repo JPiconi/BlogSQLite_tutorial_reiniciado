@@ -274,7 +274,7 @@ app.get("/dashboard", (req, res) => {
 
 app.use('*', (req, res) => {
   // Envia uma resposta de erro 404
-  res.status(404).render('pages/fail', { titulo: "ERRO 404", req: req, msg: "404" });
+  res.status(404).render('pages/fail', { titulo: "ERRO 404", req: req, msg: "<h4>Página não encontrada<br> ERRO 404!!!</h4>" });
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)

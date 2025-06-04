@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<%- console.log("EJS render fail.ejs:", msg) %>
 <%- include("../partials/head"); %>
 
 <body>
-  <%- include("../partials/menu") %>
-
-  <div class="container_rain">
-    <span class="cloud"></span>
-    <span class="cloud"></span>
-    <span class="cloud"></span>
-  </div>
-
+  <%- include("../partials/menu"); %>
   <main>
-    <section class="container">
-      <%# console.log("Estatus :",req.status) %>
-      <% if(msg=="404") { %>
-      <img src="/static/images/404_2.png" width="100%" height="100%" />
-      <img src="/static/images/404_1.avif" width="100%" height="100%" />
-      <% } else { %>
-      <h1><%- msg %></h1>
-      <% } %>
-    </section>
-  </main>
+    <!-- <section class="container"> -->
+    <!-- <div class="container"> -->
+    <div class="content-container">
 
+      <img src="/static/images/fundo_floresta.jpeg" alt="Documento" width="100%" height="600px" />
+      <div class="stamp-message error">
+        <%- msg %>
+      </div>
+    </div>
+
+    <!-- <div class="content-container">
+      <p>Algum texto importante aqui...</p>
+      <div class="stamp-message draft">
+        RASCUNHO
+      </div>
+    </div> -->
+    <!-- </div> -->
+    <!-- </section> -->
+  </main>
   <%- include("../partials/footer") %>
 </body>
 

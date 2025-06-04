@@ -1,40 +1,56 @@
 <% console.log(`usertable.ejs -> DADOS: ${JSON.stringify(dados)}`); %>
 <% if (req.session.loggedin) { %>
-<section>
-  <table>
-    <thead>
-      <tr style="text-align: center; align-items: center;">
-        <th colspan="5" style="background-color: rgba(127, 255, 212, 0.274);">Lista de usuários cadastrados</th>
-      </tr>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Nome</th>
-        <th scope="col">Email</th>
-        <th scope="col">Celular</th>
-        <th scope="col">Senha</th>
-      </tr>
-    </thead>
-    <tbody>
-      <%# let index=1; dados.forEach(user => { %>
-      <!-- <tr <%#- req.session.username==user.username ? `style="color: white; font-style: bold;"` : `` %>> -->
+<section class="div-table-container"> <%# Container principal %>
 
+  <div class="div-table"> <%# Simula a tag <table> %>
+
+    <div class="div-table-caption">Usuários Cadastrados</div> <%# Simula <caption> %>
+
+    <div class="div-table-header"> <%# Simula <thead> %>
+      <div class="div-table-row header-row"> <%# Simula <tr> no cabeçalho %>
+        <div class="div-table-cell header-cell">ID</div>
+        <div class="div-table-cell header-cell">Nome</div>
+        <div class="div-table-cell header-cell">Email</div>
+        <div class="div-table-cell header-cell">Celular</div>
+        <div class="div-table-cell header-cell">Senha</div>
+      </div>
+    </div>
+
+    <div class="div-table-body"> <%# Simula <tbody> - este será rolável %>
       <% for(let i=0; i<dados.length; i++) { %>
-      <tr <%- req.session.username==dados[i].username ? `style="color: white; font-style: bold;"` : `` %>>
-        <td><%= dados[i].id %></td>
-        <td><%= dados[i].username %></td>
-        <td><%= dados[i].email %></td>
-        <td><%= dados[i].celular %></td>
-        <td><%= dados[i].password %></td>
-      </tr>
+      <div class="div-table-row <%- req.session.username==dados[i].username ? 'current-user-row' : '' %>"> <%# Simula <tr> no corpo %>
+        <div class="div-table-cell" data-label="ID"><%= dados[i].id %></div>
+        <div class="div-table-cell" data-label="Nome"><%= dados[i].username %></div>
+        <div class="div-table-cell" data-label="Email"><%= dados[i].email %></div>
+        <div class="div-table-cell" data-label="Celular"><%= dados[i].celular %></div>
+        <div class="div-table-cell" data-label="Senha"><%= dados[i].password %></div>
+      </div>
       <% } %>
-      <%# index++; }); %>
-    </tbody>
-    <tfoot>
-      <tr>
-        <th colspan="5" style="font-size: 16px;"><%= `Usuários registrados: ${dados.length}` %></th>
-      </tr>
-    </tfoot>
-  </table>
+      <%# Adicionar linhas de preenchimento para teste de rolagem se houver poucos dados %>
+      <%# if (dados.length < 10) { %>
+        <%# for(let j = 0; j < (15 - dados.length); j++) { %>
+          <!--
+          <div class="div-table-row placeholder-row">
+            <div class="div-table-cell" data-label="ID">Placeholder</div>
+            <div class="div-table-cell" data-label="Nome">Placeholder User</div>
+            <div class="div-table-cell" data-label="Email">placeholder@example.com</div>
+            <div class="div-table-cell" data-label="Celular">(00)00000-0000</div>
+            <div class="div-table-cell" data-label="Senha">*******</div>
+          </div>
+          -->
+        <%# } %>
+      <%# } %>
+    </div>
+
+    <div class="div-table-footer"> <%# Simula <tfoot> %>
+      <div class="div-table-row footer-row">
+        <div class="div-table-cell footer-cell full-width-cell">
+          <%= `Usuários registrados: ${dados.length}` %>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>
 <% } else { %>
 <main style="padding: 20px; text-align: center; border: 10px solid red; background-color: tomato; font-size: 64px;border-radius: 150px;">
