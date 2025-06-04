@@ -110,9 +110,7 @@ app.post("/cadastro", (req, res) => {
     : console.log(JSON.stringify(req.body));
 
   const { username, password, email, celular, cpf, rg } = req.body;
-  // Colocar aqui as validações e inclusão no banco de dados do cadastro do usuário
-  // 1. Validar dados do usuário
-  // 2. saber se ele já existe no banco
+  
   const query =
     // "SELECT * FROM users WHERE email=? OR cpf=? OR rg=? OR username=?";
     "SELECT * FROM users WHERE username=?";
@@ -124,7 +122,8 @@ app.post("/cadastro", (req, res) => {
     if (row) {
       // A variável 'row' irá retornar os dados do banco de dados,
       // executado através do SQL, variável query
-      res.redirect("/register_failed");
+      res.json({ error: "Usuário já cadastrado, refaça o cadastro" });
+      // res.send("Usuário já cadastrado, refaça o cadastro);
     } else {
       // 3. Se usuário não existe no banco cadastrar
       const insertQuery =
