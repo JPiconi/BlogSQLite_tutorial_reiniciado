@@ -45,6 +45,9 @@ app.use(
 // Middleware para isto, que neste caso é o express.static, que gerencia rotas estáticas
 app.use("/static", express.static(__dirname + "/static"));
 
+// Middleware para processar requisições e envio de JSON
+app.use(express.json());
+
 // Middleware para processar as requisições do Body Parameters do cliente
 // app.use(bodyParser.urlencoded({ extended: true })); // Para versão menor ou igual a 4 do Express
 app.use(express.urlencoded({ extended: true })); // Para Express 5+
@@ -102,39 +105,100 @@ app.get("/cadastro", (req, res) => {
 });
 
 // POST do cadastro
+// Presumo que 'db' é sua instância de conexão com o SQLite já configurada
+// Ex: const sqlite3 = require('sqlite3').verbose();
+//     const db = new sqlite3.Database('./mydatabase.db');
+
 app.post("/cadastro", (req, res) => {
-  console.log("POST /cadastro");
-  // Linha para depurar se esta vindo dados no req.body
-  !req.body
-    ? console.log(`Body vazio: ${req.body}`)
-    : console.log(JSON.stringify(req.body));
+  console.log("POST /cadastro - Recebido");
+
+  // Verifica se o corpo da requisição existe e tem dados
+  if (!req.body || Object.keys(req.body).length === 0) {
+    console.log("Corpo da requisição vazio.");
+    // É importante retornar aqui para não prosseguir
+    return res.status(400).json({ success: false, message: "Nenhum dado recebido." });
+  }
+
+  console.log("Corpo da requisição:", JSON.stringify(req.body, null, 2));
 
   const { username, password, email, celular, cpf, rg } = req.body;
-  
-  const query =
-    // "SELECT * FROM users WHERE email=? OR cpf=? OR rg=? OR username=?";
-    "SELECT * FROM users WHERE username=?";
 
-  // db.get(query, [email, cpf, rg, username], (err, row) => {
-  db.get(query, [username], (err, row) => {
-    if (err) throw err;
-    console.log(`LINHA RETORNADA do SELECT USER: ${JSON.stringify(row)}`);
+  // --- VALIDAÇÃO BÁSICA NO SERVIDOR (MUITO IMPORTANTE!) ---
+  // Mesmo que o cliente valide, o servidor DEVE validar também.
+  if (!username || !password || !email) {
+    return res.status(400).json({
+      success: false,
+      message: "Nome de usuário, senha e email são obrigatórios.",
+    });
+  }
+
+  // Outras validações podem ser adicionadas aqui (formato do email, força da senha, etc.)
+  // Exemplo simples de validação de email:
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ success: false, message: "Formato de email inválido." });
+  }
+
+  // IMPORTANTE: NUNCA armazene senhas em texto plano!
+  // Você DEVE usar uma biblioteca como bcrypt para hashear a senha antes de salvar.
+  // Ex: const bcrypt = require('bcrypt');
+  //     const saltRounds = 10;
+  //     const hashedPassword = await bcrypt.hash(password, saltRounds);
+  //     E salvar 'hashedPassword' no banco.
+  // Para este exemplo, manterei simples, mas em produção isso é CRÍTICO.
+
+  // --- VERIFICAR SE USUÁRIO JÁ EXISTE ---
+  // Você pode querer verificar por username, email, cpf, etc.
+  // Vamos focar no username e email por enquanto para simplificar.
+  const checkUserQuery = "SELECT * FROM users WHERE username = ? OR email = ?";
+  db.get(checkUserQuery, [username, email], (err, row) => {
+    if (err) {
+      console.error("Erro ao consultar o banco (verificar usuário):", err.message);
+      // Não envie o erro detalhado do banco para o cliente por segurança
+      return res.status(500).json({
+        success: false,
+        message: "Erro interno do servidor ao verificar usuário.",
+      });
+    }
+
+    console.log("Resultado da consulta de usuário existente:", row);
+
     if (row) {
-      // A variável 'row' irá retornar os dados do banco de dados,
-      // executado através do SQL, variável query
-      res.json({ error: "Usuário já cadastrado, refaça o cadastro" });
-      // res.send("Usuário já cadastrado, refaça o cadastro);
+      // Usuário já existe
+      let conflictField = "";
+      if (row.username === username) {
+        conflictField = "Nome de usuário";
+      } else if (row.email === email) {
+        conflictField = "Email";
+      }
+      return res.status(409).json({ // 409 Conflict
+        success: false,
+        message: `${conflictField} já cadastrado. Por favor, escolha outro.`,
+      });
     } else {
-      // 3. Se usuário não existe no banco cadastrar
+      // --- USUÁRIO NÃO EXISTE, PROCEDER COM O CADASTRO ---
       const insertQuery =
-        "INSERT INTO users (username, password, email, celular, cpf, rg) VALUES (?,?,?,?,?,?)";
+        "INSERT INTO users (username, password, email, celular, cpf, rg) VALUES (?, ?, ?, ?, ?, ?)";
+
+      // Lembre-se de usar a senha HASHED aqui no lugar de 'password'
       db.run(
         insertQuery,
-        [username, password, email, celular, cpf, rg],
-        (err) => {
-          // Inserir a lógica do INSERT
-          if (err) throw err;
-          res.redirect("/login");
+        [username, password /* aqui deveria ser hashedPassword */, email, celular, cpf, rg],
+        function (err) { // Usar 'function' para ter acesso ao 'this.lastID' se necessário
+          if (err) {
+            console.error("Erro ao inserir usuário no banco:", err.message);
+            return res.status(500).json({
+              success: false,
+              message: "Erro interno do servidor ao cadastrar usuário.",
+            });
+          }
+          console.log(`Usuário ${username} cadastrado com ID: ${this.lastID}`);
+          // 201 Created é um bom status para criação bem-sucedida
+          return res.status(201).json({
+            success: true,
+            message: "Usuário cadastrado com sucesso!",
+            userId: this.lastID, // Opcional: retornar o ID do usuário criado
+          });
         }
       );
     }
