@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 
-  <%- include("../partials/head"); %>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Atividade Formulário</title>
+<%- include("../partials/head"); %>
 
-    <!-- LINK PARA CSS EXTERNO -->
-    <link rel="stylesheet" href="/static/styles/styles.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atividade Formulário</title>
 
-    <!-- LINK PARA JS EXTERNO -->
-    <script src="/static/scripts/validaCadastro.js" defer></script>
-  </head>
-  <%- include("../partials/head"); %>
-  <body>
-    <%- include('../partials/menu'); %>
-    <div class="container_rain">
-      <span class="cloud"></span>
-      <span class="cloud"></span>
-      <span class="cloud"></span>
-    </div>
+  <!-- LINK PARA CSS EXTERNO -->
+  <link rel="stylesheet" href="/static/styles/styles.css" />
 
+  <!-- LINK PARA JS EXTERNO -->
+  <script src="/static/scripts/validaCadastro.js" defer></script>
+</head>
+<%- include("../partials/head"); %>
+
+<body>
+  <%- include('../partials/menu'); %>
+  <div class="container_rain">
+    <span class="cloud"></span>
+    <span class="cloud"></span>
+    <span class="cloud"></span>
+  </div>
+
+  <main>
     <section class="container">
       <div class="image_container">
         <h1>Crie sua conta</h1>
@@ -37,69 +40,32 @@
         </div>
 
         <div class="input_data">
-          <input
-            type="text"
-            id="nome"
-            name="username"
-            value="marcio"
-            required
-          />
+          <input type="text" id="nome" name="username" value="marcio" required />
           <label>Nome</label>
         </div>
 
         <div class="input_data">
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value="marcio@gmail.com"
-            required
-          />
+          <input type="email" id="email" name="email" value="marcio@gmail.com" required />
           <label>Email</label>
         </div>
 
         <div class="input_data">
-          <input
-            type="password"
-            id="senha"
-            name="password"
-            value="Aa123456!"
-            required
-          />
+          <input type="password" id="senha" name="password" value="Aa123456!" required />
           <label>Senha</label>
         </div>
 
         <div class="input_data">
-          <input
-            type="password"
-            id="confirmarSenha"
-            name="confirmarSenha"
-            value="Aa123456!"
-            required
-          />
+          <input type="password" id="confirmarSenha" name="confirmarSenha" value="Aa123456!" required />
           <label>Confirmar Senha</label>
         </div>
 
         <div class="input_data">
-          <input
-            type="tel"
-            id="celular"
-            name="celular"
-            maxlength="15"
-            value="19 9999 9999"
-            required
-          />
+          <input type="tel" id="celular" name="celular" maxlength="15" value="19 9999 9999" required />
           <label>Celular</label>
         </div>
 
         <div class="input_data">
-          <input
-            type="text"
-            id="cpf"
-            name="cpf"
-            value="111222333-44"
-            required
-          />
+          <input type="text" id="cpf" name="cpf" value="111222333-44" required />
           <label>CPF</label>
         </div>
 
@@ -114,6 +80,8 @@
         </div>
       </form>
     </section>
-    <%- include("../partials/footer") %>
-  </body>
+  </main>
+  <%- include("../partials/footer") %>
+</body>
+
 </html>
