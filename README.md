@@ -57,22 +57,23 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
 
 ```
 .
-├── public/                 # Arquivos estáticos (CSS, JS cliente, imagens)
-│   └── css/
-│       └── style.css
-├── routes/                 # Definições das rotas da aplicação
-│   └── posts.js
-├── views/                  # Arquivos de template EJS
-│   ├── edit-post.ejs
-│   ├── index.ejs
-│   ├── new-post.ejs
-│   └── view-post.ejs
-├── .gitignore
-├── app.js                  # Arquivo principal da aplicação Express
-├── database.js             # Configuração e inicialização do banco de dados SQLite
+├── Exercicios          # Arquivos de exercícios para ensino de nodejs
+├── static              # Arquivos estáticos do projeto
+│   ├── fonts               # Fontes
+│   ├── images              # Imagens
+│   ├── scripts             # Scripts de Front-end
+│   └── styles              # Estilos CSS
+├── views               # Arquivos de modelo/template usados pelo ExpressJS
+│   ├── pages               # Páginas
+│   └── partials            # Fragmentos de código parciais
+├── README.md           # Arquivo de apresentação do projeto - Este arquivo
+├── app.js              # Aplicação principal
+├── eslint.config.mjs
+├── helloworld.js       # Aplicativo inicial Hello World do Node
 ├── package-lock.json
 ├── package.json
-└── README.md
+├── rotas.js            # Aplicativo de exemplo de uso de rotas no ExpressJS
+└── user.db             # Arquivo de banco de dados do SQLite3
 ```
 
 ## 📝 Lista de Tarefas (To-Do)
@@ -80,6 +81,22 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
 Aqui estão algumas sugestões de melhorias e funcionalidades futuras para o projeto:
 
 ### Funcionalidades Essenciais e Melhorias
+*   [ ] **Implementar/Revisar Registro de Posts:**
+    *   [ ] Criar a rota e o controller para exibir o formulário de novo post (`GET /new-post`).
+    *   [ ] Criar a view EJS para o formulário de novo post (`new-post.ejs`).
+    *   [ ] Criar a rota e o controller para processar o envio do formulário e salvar o post no banco de dados (`POST /posts`).
+*   [ ] **Implementar/Revisar Visualização de Posts:**
+    *   [ ] Criar a rota e o controller para listar todos os posts na página inicial (`GET /`).
+    *   [ ] Criar a view EJS para exibir a lista de posts (`index.ejs`).
+    *   [ ] Criar a rota e o controller para visualizar um post individual pelo seu ID (`GET /post/:id`).
+    *   [ ] Criar a view EJS para exibir um post individual (`view-post.ejs`).
+*   [ ] **Implementar/Revisar Edição de Posts:**
+    *   [ ] Criar a rota e o controller para exibir o formulário de edição de um post (`GET /edit-post/:id`).
+    *   [ ] Criar a view EJS para o formulário de edição (`edit-post.ejs`), pré-preenchida com os dados do post.
+    *   [ ] Criar a rota e o controller para processar a atualização do post no banco de dados (`POST /edit-post/:id`).
+*   [ ] **Implementar/Revisar Exclusão de Posts:**
+    *   [ ] Criar a rota e o controller para deletar um post do banco de dados (`POST /delete-post/:id` ou `DELETE /posts/:id`).
+    *   [ ] Adicionar confirmação antes de excluir.
 *   [ ] **Melhorar o Design/Estilização (CSS):**
     *   [ ] Aplicar um framework CSS (Bootstrap, Tailwind CSS) ou criar um estilo mais elaborado.
     *   [ ] Tornar o layout responsivo.
