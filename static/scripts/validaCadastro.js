@@ -144,6 +144,7 @@ function fetchDatas(event) {
   };
 
   console.log("Formulário Enviado: ", JSON.stringify(formData, null, 2));
+  return formData;
 }
 /* --------------------------------------------------------------------- */
 

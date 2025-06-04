@@ -65,9 +65,7 @@ app.post("/cadastro", (req, res) => {
     : console.log(JSON.stringify(req.body));
 
   const { username, password, email, celular, cpf, rg } = req.body;
-  // Colocar aqui as validações e inclusão no banco de dados do cadastro do usuário
-  // 1. Validar dados do usuário
-  // 2. saber se ele já existe no banco
+  
   const query =
     "SELECT * FROM users WHERE email=? OR cpf=? OR rg=? OR username=?";
   db.get(query, [email, cpf, rg, username], (err, row) => {
@@ -76,7 +74,8 @@ app.post("/cadastro", (req, res) => {
     if (row) {
       // A variável 'row' irá retornar os dados do banco de dados,
       // executado através do SQL, variável query
-      res.send("Usuário já cadastrado, refaça o cadastro");
+      res.json({ error: "Usuário já cadastrado, refaça o cadastro" });
+      // res.send("Usuário já cadastrado, refaça o cadastro);
     } else {
       // 3. Se usuário não existe no banco cadastrar
       const insertQuery =
@@ -113,7 +112,25 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   console.log("POST /login");
-  res.send("Login ainda não implementado.");
+  // Linha para depurar se esta vindo dados no req.body
+  !req.body
+    ? console.log(`Body vazio: ${req.body}`)
+    : console.log(JSON.stringify(req.body));
+  const { username, password } = req.body;
+  
+  const query = "SELECT * FROM users WHERE username=? AND password=?";
+  db.get(query, [username, password], (err, row) => {
+    if (err) throw err;
+    console.log(`${JSON.stringify(row)}`);
+    if (row) {
+      // A variável 'row' irá retornar os dados do banco de dados,
+      // executado através do SQL, variável query
+      res.send(`<pre>Login realizado com sucesso!<br>${JSON.stringify(row, 2)}</pre>`);
+    } else {
+      res.send("Usuário não encontrado!");
+    }
+  });
+  // res.send("Login ainda não implementado.");
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
