@@ -8,18 +8,21 @@ const confirmarSenha = document.getElementById("confirmarSenha");
 const celular = document.getElementById("celular");
 const cpf = document.getElementById("cpf");
 const rg = document.getElementById("rg");
-const msgError = document.getElementsByClassName("msgError");
+const msgErrorElements = document.getElementsByClassName("msgError");
 
 /* ------ FUNÇÃO PARA RENDERIZAR AS DIFERENTES MENSAGENS DE ERRO! ------ */
 const createDisplayMsgError = (mensagem) => {
-  msgError[0].textContent = mensagem;
+  if (msgErrorElements.length > 0) {
+    msgErrorElements[0].textContent = mensagem;
+    msgErrorElements[0].style.display = mensagem ? "block" : "none";
+  }
 };
 /* --------------------------------------------------------------------- */
 
 /* ---------------- FUNÇÃO PARA VERIFICAR O NOME ----------------------- */
 const checkNome = () => {
-  const nomeRegex = /^[A-Za-zÀ-ÿ\s]+$/;
-  return nomeRegex.test(nome.value);
+  const nomeRegex = /^[A-Za-zÀ-ÿ\s'-]+$/;
+  return nomeRegex.test(nome.value.trim());
 };
 /* --------------------------------------------------------------------- */
 
@@ -101,49 +104,108 @@ function checkPasswordStrength(senha) {
 /* --------------------------------------------------------------------- */
 
 /* ------------- FUNÇÃO PARA VERIFICAR E ENVIAR DADOS ------------------ */
-function fetchDatas(event) {
+async function fetchDatas(event) {
+  // Tornar a Função async para usar await
   event.preventDefault();
+  createDisplayMsgError(""); //Limpa mensagens de erro anteriores
 
-  if (!checkNome) {
+  if (!checkNome()) {
+    //Correção aqui : chamar a função
     createDisplayMsgError(
       "O nome não pode conter números ou caracteres especiais!"
     );
+    nome.focus();
     return;
   }
 
   if (!checkEmail(email.value)) {
     createDisplayMsgError(
-      "O nome não pode conter números ou caracteres especiais!"
+      //Correção aqui: mensagem apropriada
+      "O e-mail digitado não é valido ou não é de domínio permitido!"
     );
-    return;
-  }
+    email.focus;
 
-  if (!checkPasswordMatch()) {
-    createDisplayMsgError("As senhas digitadas não coincidem!");
     return;
   }
 
   const senhaError = checkPasswordStrength(senha.value);
   if (senhaError) {
     createDisplayMsgError(senhaError);
+    senha.focus;
+    return;
+  }
+  if (!checkPasswordMatch()) {
+    createDisplayMsgError("As senhas não coincidem!");
+    confirmarSenha.focus();
     return;
   }
 
-  if (celular.value && /[A-Za-zÀ-ÿ]/.test(celular.value)) {
-    createDisplayMsgError("O telefone deve conter apenas números");
+  // Validação do celular (opcional, já que a máscara tenta corrigir)
+  const celularLimpo = celular.value.replace(/\D/g, "");
+  if (celular.value && (celularLimpo.length < 10 || celularLimpo.length > 11)) {
+    createDisplayMsgError("O número de celular parece inválido.");
+    celular.focus();
     return;
   }
 
   const formData = {
-    nome: nome.value,
-    email: email.value,
-    senha: senha.value,
-    celular: celular.value,
-    cpf: cpf.value,
-    rg: rg.value,
+    // `username`: Representa o nome de usuário inserido pelo usuário
+    // `.trim()` é usado para remover quaisquer espaços em branco extras.
+    // do início ou do fim da string do nome do usuário
+    username: nome.value.trim(),
+
+    // `email`: Armazena o endereço de e-mail fornecido
+    // `.trim()` é usado para remover quaisquer espaços em branco extras.
+    // desnecessários, garantindo que o e-mail seja processado corretamente.
+    email: email.value.trim(),
+
+    //`password`: Contém a senha digitada pelo usuário.
+    //Importante: A senha não deve ser "Trimmed" (não se deve usar .trim())
+    //porque espaços no ínicio ou no fim podem ser intencionais e parte da senha escolhida
+    password: senha.value,
+
+    //`celular`: Guarda o número de celular do usuário.
+    //`celularLimpo` é uma variável que  já contém o número de celular que contem apenas numeros
+    celular: celularLimpo,
+
+    //replace(/\D/d, "") usado para remover todos os carcteres que não são digitos
+    cpf: cpf.value.replace(/\D/g, ""),
+
+    //similar ao cpf
+    rg: rg.value.replace(/\D/g, ""),
   };
 
-  console.log("Formulário Enviado: ", JSON.stringify(formData, null, 2));
+  console.log("Dados a serem enviados: ", JSON.stringify(formData, null, 2));
+
+  // ---- INÍCIO DA LÓGICA DE ENVIO ----
+  try {
+    const response = await fetch("/cadastro", {
+      method: "POST", //método HTTP 200
+      headers: {
+        "Content-Type": "application/json", //Indicando que estamos enviando JSON
+      },
+      body: JSON.stringify(formData),
+    });
+    if (response.ok) {
+      const result = await response.json();
+      console, log("Sucesso: ", result);
+      formulario.reset();
+      alert("Cadastro realizado com sucesso! " + (result.message || ""));
+      window.location.href = "/login";
+    } else {
+      const errorData = await response.json().catch(() => ({
+        message: "Erro ao processar a resposta do servidor.",
+      }));
+      console.error("Erro do servidor:", response.status, errorData);
+      createDisplayMsgError(
+        `Erro: ${errorData.message || response.statusText}`
+      );
+    }
+  } catch (error) {
+    console.error("Erro na requisição: ", error);
+    createDisplayMsgError("Erro de conexão. Por Favor, tente novamente");
+  }
+  // ---FIM DA LÓGICA DE ENVIO ---
 }
 /* --------------------------------------------------------------------- */
 

@@ -45,19 +45,19 @@ app.use(
 // Middleware para isto, que neste caso é o express.static, que gerencia rotas estáticas
 app.use("/static", express.static(__dirname + "/static"));
 
+app.use(express.json());
+
 // Middleware para processar as requisições do Body Parameters do cliente
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configurar EJS como o motor de visualização
 app.set("view engine", "ejs");
-
 
 const index =
   "<a href='/sobre'> Sobre </a><a href='/login'> Login </a><a href='/cadastro'> Cadastrar </a>";
 const sobre = "sobre";
 const login = 'Vc está na página "Login"<br><a href="/">Voltar</a>';
 const cadastro = 'Vc está na página "Cadastro"<br><a href="/">Voltar</a>';
-
 
 /* Método express.get necessita de dois parâmetros 
  Na ARROW FUNCTION, o primeiro são os dados do servidor (REQUISITION - 'req')
@@ -102,39 +102,79 @@ app.get("/cadastro", (req, res) => {
 
 // POST do cadastro
 app.post("/cadastro", (req, res) => {
-  console.log("POST /cadastro");
-  // Linha para depurar se esta vindo dados no req.body
-  !req.body
-    ? console.log(`Body vazio: ${req.body}`)
-    : console.log(JSON.stringify(req.body));
-
+  console.log("POST /cadastro - Recebido");
+  if (!req.body || Object.keys(req.body).length === 0) {
+    console.log("corpo da requisição vazio");
+    return res
+      .status(400)
+      .json({ success: false, message: "nenhum dado recebido." });
+  }
+  console.log("corpo da requisição:", JSON.stringify(req.body, null, 2));
   const { username, password, email, celular, cpf, rg } = req.body;
-  // Colocar aqui as validações e inclusão no banco de dados do cadastro do usuário
-  // 1. Validar dados do usuário
-  // 2. saber se ele já existe no banco
-  const query =
-    // "SELECT * FROM users WHERE email=? OR cpf=? OR rg=? OR username=?";
-    "SELECT * FROM users WHERE username=?";
 
-  // db.get(query, [email, cpf, rg, username], (err, row) => {
-  db.get(query, [username], (err, row) => {
-    if (err) throw err;
-    console.log(`LINHA RETORNADA do SELECT USER: ${JSON.stringify(row)}`);
+  // -------------- VALIDAÇÃO BÁSICA NO SERVIDOR (MUITO IMPORTANTE) -----------
+
+  if (!username || !password || !email) {
+    return (
+      res.status(400),
+      json({
+        success: false,
+        message: "Nome do usuário, senha e email são obrigatórios.",
+      })
+    );
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Formato de email inválido" });
+  }
+
+  const checkUserQuery = "SELECT * FROM users WHERE username = ? OR email = ?";
+  db.get(checkUserQuery, [username, email], (err, row) => {
+    if (err) {
+      console.log(
+        "Erro ao consultar o banco (verificar usuário):",
+        err.message
+      );
+      return res.status(500).json({
+        success: false,
+        message: "Erro interno do servidor ao verificar usuário.",
+      });
+    }
+
+    console.log("Resultado da consulta deusuário existente:", row);
+
     if (row) {
-      // A variável 'row' irá retornar os dados do banco de dados,
-      // executado através do SQL, variável query
-      res.redirect("/register_failed");
+      let conflictField = "";
+      if (row.username === username) {
+        conflictField = "Nome de usuário";
+      } else if (row.email === email) {
+        conflictField = "Email";
+      }
+      return res.status(409).json({
+        success: false,
+        message: `${conflictField} já cadastrado. Por favor, escolha outro.`,
+      });
     } else {
-      // 3. Se usuário não existe no banco cadastrar
       const insertQuery =
-        "INSERT INTO users (username, password, email, celular, cpf, rg) VALUES (?,?,?,?,?,?)";
+        "INSERT INTO users (username, password, email, celular, cpf, rg) VALUES (?, ?, ?, ?, ?, ?)";
       db.run(
         insertQuery,
         [username, password, email, celular, cpf, rg],
-        (err) => {
-          // Inserir a lógica do INSERT
-          if (err) throw err;
-          res.redirect("/login");
+        function (err) {
+          if (err) {
+            console.error("Erro ao inserir usuário no banco:", err.message);
+            return res.status(500).json({
+              success: false,
+              message: "Erro interno do servidor ao cadastrar usuário.",
+            });
+          }
+          console.log(`Usuário ${username} cadastro com ID: ${this.lastID}`);
+          return res.status(201).json({
+            success: true,
+          });
         }
       );
     }
@@ -149,7 +189,7 @@ app.get("/sobre", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  console.log("GET /logout")
+  console.log("GET /logout");
   // Exemplo de uma rota (END POINT) controlado pela sessão do usuário logado.
   req.session.destroy(() => {
     res.redirect("/");
@@ -164,12 +204,20 @@ app.get("/login", (req, res) => {
 
 app.get("/register_failed", (req, res) => {
   console.log("GET /register_failed");
-  res.render("pages/fail", { ...config, req: req, msg: "<a href='/cadastro'>Cadastro inválido</a>" });
+  res.render("pages/fail", {
+    ...config,
+    req: req,
+    msg: "<a href='/cadastro'>Cadastro inválido</a>",
+  });
 });
 
 app.get("/invalid_login", (req, res) => {
   console.log("GET /invalid_login");
-  res.render("pages/fail", { ...config, req: req, msg: "Usuário e senha inválida!!!" });
+  res.render("pages/fail", {
+    ...config,
+    req: req,
+    msg: "Usuário e senha inválida!!!",
+  });
 });
 
 app.post("/login", (req, res) => {
@@ -200,7 +248,11 @@ app.get("/dashboard", (req, res) => {
   if (req.session.loggedin) {
     db.all("SELECT * FROM users", [], (err, row) => {
       if (err) throw err;
-      res.render("pages/dashboard", { titulo: "DASHBOARD", dados: row, req: req });
+      res.render("pages/dashboard", {
+        titulo: "DASHBOARD",
+        dados: row,
+        req: req,
+      });
     });
   } else {
     console.log("Tentativa de acesso a àrea restrita");
@@ -208,9 +260,11 @@ app.get("/dashboard", (req, res) => {
   }
 });
 
-app.use('*', (req, res) => {
+app.use("*", (req, res) => {
   // Envia uma resposta de erro 404
-  res.status(404).render('pages/fail', { titulo: "ERRO 404", req: req, msg: "404" });
+  res
+    .status(404)
+    .render("pages/fail", { titulo: "ERRO 404", req: req, msg: "404" });
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
