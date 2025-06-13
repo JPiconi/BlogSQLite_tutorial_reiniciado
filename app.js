@@ -174,6 +174,8 @@ app.post("/cadastro", (req, res) => {
           console.log(`Usuário ${username} cadastro com ID: ${this.lastID}`);
           return res.status(201).json({
             success: true,
+            message: "Usuário cadastrado com sucesso!",
+            userId: this.lastID, //opcional: retornar o id do usuário criado
           });
         }
       );
