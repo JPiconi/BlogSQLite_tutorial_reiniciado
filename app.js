@@ -1,6 +1,6 @@
 const express = require("express"); // importa lib do Express
 const sqlite3 = require("sqlite3"); // Importa lib do sqlite3
-const bodyParser = require("body-parser"); // Importa o body-parser se vc usar o Express <= 4
+const bodyParser = require("body-parser"); // Importa o body-parser
 const session = require("express-session"); // Importa 0 express-session
 
 const PORT = 9000; // Porta TCP do servidor HTTP da aplicação
@@ -45,23 +45,19 @@ app.use(
 // Middleware para isto, que neste caso é o express.static, que gerencia rotas estáticas
 app.use("/static", express.static(__dirname + "/static"));
 
-// Middleware para processar requisições e envio de JSON
 app.use(express.json());
 
 // Middleware para processar as requisições do Body Parameters do cliente
-// app.use(bodyParser.urlencoded({ extended: true })); // Para versão menor ou igual a 4 do Express
-app.use(express.urlencoded({ extended: true })); // Para Express 5+
+//app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configurar EJS como o motor de visualização
 app.set("view engine", "ejs");
-
 
 const index =
   "<a href='/sobre'> Sobre </a><a href='/login'> Login </a><a href='/cadastro'> Cadastrar </a>";
 const sobre = "sobre";
 const login = 'Vc está na página "Login"<br><a href="/">Voltar</a>';
 const cadastro = 'Vc está na página "Cadastro"<br><a href="/">Voltar</a>';
-
 
 /* Método express.get necessita de dois parâmetros 
  Na ARROW FUNCTION, o primeiro são os dados do servidor (REQUISITION - 'req')
@@ -105,86 +101,69 @@ app.get("/cadastro", (req, res) => {
 });
 
 // POST do cadastro
-// Presumo que 'db' é sua instância de conexão com o SQLite já configurada
-// Ex: const sqlite3 = require('sqlite3').verbose();
-//     const db = new sqlite3.Database('./mydatabase.db');
-
 app.post("/cadastro", (req, res) => {
   console.log("POST /cadastro - Recebido");
-
-  // Verifica se o corpo da requisição existe e tem dados
   if (!req.body || Object.keys(req.body).length === 0) {
-    console.log("Corpo da requisição vazio.");
-    // É importante retornar aqui para não prosseguir
-    return res.status(400).json({ success: false, message: "Nenhum dado recebido." });
+    console.log("corpo da requisição vazio");
+    return res
+      .status(400)
+      .json({ success: false, message: "nenhum dado recebido." });
   }
-
-  console.log("Corpo da requisição:", JSON.stringify(req.body, null, 2));
-
+  console.log("corpo da requisição:", JSON.stringify(req.body, null, 2));
   const { username, password, email, celular, cpf, rg } = req.body;
 
-  // --- VALIDAÇÃO BÁSICA NO SERVIDOR (MUITO IMPORTANTE!) ---
-  // Mesmo que o cliente valide, o servidor DEVE validar também.
+  // -------------- VALIDAÇÃO BÁSICA NO SERVIDOR (MUITO IMPORTANTE) -----------
+
   if (!username || !password || !email) {
-    return res.status(400).json({
-      success: false,
-      message: "Nome de usuário, senha e email são obrigatórios.",
-    });
+    return (
+      res.status(400),
+      json({
+        success: false,
+        message: "Nome do usuário, senha e email são obrigatórios.",
+      })
+    );
   }
 
-  // Outras validações podem ser adicionadas aqui (formato do email, força da senha, etc.)
-  // Exemplo simples de validação de email:
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return res.status(400).json({ success: false, message: "Formato de email inválido." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Formato de email inválido" });
   }
 
-  // IMPORTANTE: NUNCA armazene senhas em texto plano!
-  // Você DEVE usar uma biblioteca como bcrypt para hashear a senha antes de salvar.
-  // Ex: const bcrypt = require('bcrypt');
-  //     const saltRounds = 10;
-  //     const hashedPassword = await bcrypt.hash(password, saltRounds);
-  //     E salvar 'hashedPassword' no banco.
-  // Para este exemplo, manterei simples, mas em produção isso é CRÍTICO.
-
-  // --- VERIFICAR SE USUÁRIO JÁ EXISTE ---
-  // Você pode querer verificar por username, email, cpf, etc.
-  // Vamos focar no username e email por enquanto para simplificar.
   const checkUserQuery = "SELECT * FROM users WHERE username = ? OR email = ?";
   db.get(checkUserQuery, [username, email], (err, row) => {
     if (err) {
-      console.error("Erro ao consultar o banco (verificar usuário):", err.message);
-      // Não envie o erro detalhado do banco para o cliente por segurança
+      console.log(
+        "Erro ao consultar o banco (verificar usuário):",
+        err.message
+      );
       return res.status(500).json({
         success: false,
         message: "Erro interno do servidor ao verificar usuário.",
       });
     }
 
-    console.log("Resultado da consulta de usuário existente:", row);
+    console.log("Resultado da consulta deusuário existente:", row);
 
     if (row) {
-      // Usuário já existe
       let conflictField = "";
       if (row.username === username) {
         conflictField = "Nome de usuário";
       } else if (row.email === email) {
         conflictField = "Email";
       }
-      return res.status(409).json({ // 409 Conflict
+      return res.status(409).json({
         success: false,
-        message: `${conflictField} já cadastrado. Por favor, escolha outro.`,
+        message: `${conflictField} já cadastrado. Por favor, faça outro.`,
       });
     } else {
-      // --- USUÁRIO NÃO EXISTE, PROCEDER COM O CADASTRO ---
       const insertQuery =
         "INSERT INTO users (username, password, email, celular, cpf, rg) VALUES (?, ?, ?, ?, ?, ?)";
-
-      // Lembre-se de usar a senha HASHED aqui no lugar de 'password'
       db.run(
         insertQuery,
-        [username, password /* aqui deveria ser hashedPassword */, email, celular, cpf, rg],
-        function (err) { // Usar 'function' para ter acesso ao 'this.lastID' se necessário
+        [username, password, email, celular, cpf, rg],
+        function (err) {
           if (err) {
             console.error("Erro ao inserir usuário no banco:", err.message);
             return res.status(500).json({
@@ -192,12 +171,9 @@ app.post("/cadastro", (req, res) => {
               message: "Erro interno do servidor ao cadastrar usuário.",
             });
           }
-          console.log(`Usuário ${username} cadastrado com ID: ${this.lastID}`);
-          // 201 Created é um bom status para criação bem-sucedida
+          console.log(`Usuário ${username} cadastro com ID: ${this.lastID}`);
           return res.status(201).json({
             success: true,
-            message: "Usuário cadastrado com sucesso!",
-            userId: this.lastID, // Opcional: retornar o ID do usuário criado
           });
         }
       );
@@ -213,7 +189,7 @@ app.get("/sobre", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  console.log("GET /logout")
+  console.log("GET /logout");
   // Exemplo de uma rota (END POINT) controlado pela sessão do usuário logado.
   req.session.destroy(() => {
     res.redirect("/");
@@ -228,12 +204,20 @@ app.get("/login", (req, res) => {
 
 app.get("/register_failed", (req, res) => {
   console.log("GET /register_failed");
-  res.render("pages/fail", { ...config, req: req, msg: "<a href='/cadastro'>Cadastro inválido</a>" });
+  res.render("pages/fail", {
+    ...config,
+    req: req,
+    msg: "<a href='/cadastro'>Cadastro inválido</a>",
+  });
 });
 
 app.get("/invalid_login", (req, res) => {
   console.log("GET /invalid_login");
-  res.render("pages/fail", { ...config, req: req, msg: "Usuário e senha inválida!!!" });
+  res.render("pages/fail", {
+    ...config,
+    req: req,
+    msg: "Usuário e senha inválida!!!",
+  });
 });
 
 app.post("/login", (req, res) => {
@@ -264,7 +248,11 @@ app.get("/dashboard", (req, res) => {
   if (req.session.loggedin) {
     db.all("SELECT * FROM users", [], (err, row) => {
       if (err) throw err;
-      res.render("pages/dashboard", { titulo: "DASHBOARD", dados: row, req: req });
+      res.render("pages/dashboard", {
+        titulo: "DASHBOARD",
+        dados: row,
+        req: req,
+      });
     });
   } else {
     console.log("Tentativa de acesso a àrea restrita");
@@ -272,9 +260,11 @@ app.get("/dashboard", (req, res) => {
   }
 });
 
-app.use('*', (req, res) => {
+app.use("*", (req, res) => {
   // Envia uma resposta de erro 404
-  res.status(404).render('pages/fail', { titulo: "ERRO 404", req: req, msg: "<h4>Página não encontrada<br> ERRO 404!!!</h4>" });
+  res
+    .status(404)
+    .render("pages/fail", { titulo: "ERRO 404", req: req, msg: "404" });
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)

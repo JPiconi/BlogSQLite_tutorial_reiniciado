@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+  <%- include("../partials/head"); %>
+  <body>
+    <%- include('../partials/menu'); %>
+    <div class="container_rain">
+      <span class="cloud"></span>
+      <span class="cloud"></span>
+      <span class="cloud"></span>
+    </div>
 
-<%- include("../partials/head"); %>
-
-<body>
-  <%- include('../partials/menu'); %>
-  <div class="container_rain">
-    <span class="cloud"></span>
-    <span class="cloud"></span>
-    <span class="cloud"></span>
-  </div>
-
-  <main>
     <section class="container">
       <div class="image_container">
         <h1>Crie sua conta</h1>
@@ -43,12 +40,23 @@
         </div>
 
         <div class="input_data">
-          <input type="password" id="confirmarSenha" name="confirmarSenha" required />
+          <input
+            type="password"
+            id="confirmarSenha"
+            name="confirmarSenha"
+            required
+          />
           <label>Confirmar Senha</label>
         </div>
 
         <div class="input_data">
-          <input type="tel" id="celular" name="celular" maxlength="15" required />
+          <input
+            type="tel"
+            id="celular"
+            name="celular"
+            maxlength="15"
+            required
+          />
           <label>Celular</label>
         </div>
 
@@ -68,8 +76,6 @@
         </div>
       </form>
     </section>
-  </main>
-  <%- include("../partials/footer") %>
-</body>
-
+    <%- include("../partials/footer") %>
+  </body>
 </html>

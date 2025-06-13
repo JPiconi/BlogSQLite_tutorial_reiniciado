@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<%- include("../partials/head"); %>
+  <%- include("../partials/head"); %>
+  <body>
+    <%- include('../partials/menu'); %>
 
-<body>
-  <%- include('../partials/menu'); %>
+    <div class="container_rain">
+      <span class="cloud"></span>
+      <span class="cloud"></span>
+      <span class="cloud"></span>
+      <span class="sun"></span>
+    </div>
 
-  <div class="container_rain">
-    <span class="cloud"></span>
-    <span class="cloud"></span>
-    <span class="cloud"></span>
-    <span class="sun"></span>
-  </div>
-
-  <main>
     <section class="container">
-      <div class="image_container">
+      <div class="imagem_container">
         <h1>Bem-vindo</h1>
         <p>
           Compartilhe suas aventuras e <br />
@@ -43,8 +41,6 @@
         </div>
       </form>
     </section>
-  </main>
-  <%- include("../partials/footer") %>
-</body>
-
+    <%- include("../partials/footer") %>
+  </body>
 </html>

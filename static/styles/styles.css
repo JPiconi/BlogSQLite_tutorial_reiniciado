@@ -13,32 +13,28 @@
   margin: 0;
   box-sizing: border-box;
   text-decoration: none;
-  /* border: 1px solid red; */
 }
 
 body {
+  height: 100vh;
   background-color: #375534;
-  max-height: 800px;
-}
-
-main {
-  width: 100%;
-  height: 100%;
-
-  padding: 15px 15px;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 header {
   width: 100%;
-  padding: 30px 15px;
+  padding: 10px 15px;
   background-color: #0f2a1d;
+  position: absolute;
+  top: 0;
+  left: 0;
 
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -63,6 +59,9 @@ footer {
   height: 90px;
   background-color: black;
 
+  position: absolute;
+  bottom: 0;
+  left: 0;
 
   display: flex;
   justify-content: center;
@@ -83,63 +82,29 @@ footer p {
   width: 400px;
   height: 100vh;
   background-color: transparent;
-  visibility: hidden;
 }
 
 table {
-  padding: auto;
-  font-size: 24px;
-  height: 100%;
-  width: 80vh;
-  justify-content: center;
-  align-items: center;
-  /* overflow: auto; */
-  overflow-y: scroll;
-  border-collapse: collapse;
-  /* Remove espaço entre as células */
-  width: 100%;
-  /* Tabela ocupa toda a largura disponível */
-}
-
-thead {
-  display: block;
-  /* Mantém o cabeçalho fixo */
-}
-
-th {
-  background-color: rgba(80, 80, 68, 0.347);
-  font-style: italic;
-  min-width: 15%;
-}
-
-tbody {
-  display: block;
-  /* Permite definir altura máxima */
-  width: 100%;
-  /* Garante que o tbody ocupe toda a largura da tabela */
-  height: 100%;
-  /* Garante que o tbody ocupe toda a altura da tabela */
-  overflow: hidden;
-  /* Esconde a rolagem horizontal */
-  max-height: 300px;
-  /* Defina a altura máxima do tbody */
-  overflow-y: scroll;
-  /* Ativa a rolagem vertical */
-}
-
-td,
-th {
-  min-width: 20px;
+  /* font-size: 24px; */
+  width: 100vh;
 }
 
 tr,
+td,
+thead,
+th,
 tfoot {
   border: 1px solid black;
   border-bottom: 3px solid #34554c;
   background-color: #689b63;
   text-align: center;
   padding: 5px;
-  /* overflow: auto; */
+  overflow: auto;
+}
+
+th {
+  background-color: rgba(80, 80, 68, 0.347);
+  font-style: italic;
 }
 
 .cloud {
@@ -204,354 +169,19 @@ tfoot {
   }
 }
 
-
-/* Container principal da "tabela" de divs */
-.div-table-container {
-  width: 120%;
-  max-width: 800px;
-  height: 80vh;
-  /* Altura definida para o container */
-  overflow: hidden;
-  /* Esconder overflow do container */
-  /* display: flex; */
-  /* Para a .div-table ocupar 100% da altura */
-  /* flex-direction: column; */
-  border: 1px solid #555;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  margin: auto;
-  font-size: 14px;
-  /* Ajuste o tamanho da fonte base da tabela */
-}
-
-.div-table {
-  width: 100%;
-  height: 100%;
-  /* Ocupa toda a altura do container */
-  display: flex;
-  flex-direction: column;
-  /* Empilha caption, header, body, footer */
-}
-
-.div-table-caption {
-  padding: 15px;
-  font-size: 1.5em;
-  /* 1.5 * 14px */
-  font-weight: bold;
-  text-align: center;
-  background-color: #e0e0e0;
-  color: #333;
-  border-bottom: 1px solid #ccc;
-  flex-shrink: 0;
-  /* Não encolher */
-}
-
-.div-table-header,
-.div-table-footer {
-  background-color: #50854c;
-  /* Cor de fundo para cabeçalho/rodapé */
-  color: white;
-  position: sticky;
-  /* Mantém fixo */
-  z-index: 10;
-  flex-shrink: 0;
-  /* Não encolher */
-}
-
-.div-table-header {
-  top: 0;
-  /* Fixa no topo do .div-table-container (ou seu contexto de rolagem) */
-}
-
-.div-table-footer {
-  bottom: 0;
-  /* Fixa na base */
-  border-top: 1px solid #3e663a;
-}
-
-.div-table-row {
-  display: flex;
-  /* Alinha as células horizontalmente */
-  width: 100%;
-  border-bottom: 1px solid #ddd;
-  /* Linha entre as "linhas" */
-}
-
-.div-table-header .div-table-row {
-  border-bottom: 1px solid #3e663a;
-  /* Borda mais escura para o header */
-}
-
-.div-table-row:last-child {
-  border-bottom: none;
-  /* Remove borda da última linha no body */
-}
-
-.div-table-cell {
-  padding: 10px 12px;
-  flex-grow: 1;
-  /* Distribui o espaço igualmente por padrão */
-  flex-basis: 0;
-  /* Permite que flex-grow funcione corretamente */
-  /* Para larguras de coluna específicas, você pode usar: */
-  /* flex: 0 0 20%; ou width: 20%; (e ajustar o flex-grow) */
-  overflow: hidden;
-  /* Para textos longos */
-  text-overflow: ellipsis;
-  /* Adiciona "..." se o texto for muito longo */
-  white-space: nowrap;
-  /* Impede quebra de linha dentro da célula por padrão */
-  border-right: 1px solid #eee;
-  /* Linha vertical entre células */
-}
-
-.div-table-cell:last-child {
-  border-right: none;
-}
-
-/* Estilo específico para células de cabeçalho */
-.header-cell {
-  font-weight: bold;
-  text-align: center;
-  white-space: normal;
-  /* Permite quebra de linha no cabeçalho se necessário */
-}
-
-/* Corpo da tabela (rolável) */
-.div-table-body {
-  flex-grow: 1;
-  /* Ocupa o espaço restante */
-  overflow-y: auto;
-  /* Rolagem vertical */
-  overflow-x: hidden;
-  /* Esconde rolagem horizontal */
-  background-color: #e8f5e9;
-}
-
-.div-table-body .div-table-row:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-.div-table-body .div-table-row:hover {
-  background-color: #d1e8d0;
-}
-
-/* Estilo para a linha do usuário logado */
-.current-user-row {
-  background-color: #34554c !important;
-  color: white !important;
-  font-weight: bold;
-}
-
-.current-user-row .div-table-cell {
-  border-right-color: #50854c;
-  border-bottom-color: #50854c;
-  /* Ajusta a cor da borda inferior também */
-}
-
-/* Célula do rodapé */
-.footer-cell {
-  text-align: center;
-  padding: 12px;
-  font-size: 1.1em;
-  /* 1.1 * 14px */
-}
-
-.full-width-cell {
-  /* Para simular colspan */
-  flex-grow: 1;
-  /* Ocupa toda a largura da linha do rodapé */
-  flex-basis: 100%;
-  border-right: none;
-  /* Sem borda direita se for a única célula */
-}
-
-/* Larguras de Coluna Específicas (Exemplo) */
-/* Você pode ajustar essas classes conforme necessário e aplicá-las às células no EJS.
-   Ou definir larguras diretamente nas células do cabeçalho e do corpo.
-   Este exemplo define para todas as células na mesma "coluna".
-*/
-.div-table-row .div-table-cell:nth-child(1) {
-  /* Coluna ID */
-  flex-grow: 0.5;
-  min-width: 60px;
-  /* Largura mínima */
-  text-align: center;
-}
-
-.div-table-row .div-table-cell:nth-child(2) {
-  /* Coluna Nome */
-  flex-grow: 2;
-  min-width: 150px;
-}
-
-.div-table-row .div-table-cell:nth-child(3) {
-  /* Coluna Email */
-  flex-grow: 2.5;
-  min-width: 200px;
-}
-
-.div-table-row .div-table-cell:nth-child(4) {
-  /* Coluna Celular */
-  flex-grow: 1.5;
-  min-width: 120px;
-  text-align: center;
-}
-
-.div-table-row .div-table-cell:nth-child(5) {
-  /* Coluna Senha */
-  flex-grow: 1.5;
-  min-width: 100px;
-  text-align: center;
-  /* Considere não exibir senhas em texto plano */
-  /* font-family: 'Courier New', Courier, monospace; */
-  /* -webkit-text-security: disc; */
-  /* Para mascarar, mas não é padrão */
-}
-
-
-/* Responsividade básica com data-label (opcional) */
-@media screen and (max-width: 768px) {
-  .div-table-header {
-    display: none;
-    /* Esconde o cabeçalho tradicional em telas pequenas */
-  }
-
-  .div-table-row {
-    flex-direction: column;
-    /* Empilha células verticalmente */
-    border-bottom: 2px solid #50854c;
-    /* Borda mais forte entre "linhas" móveis */
-    margin-bottom: 10px;
-    background-color: #fff;
-    /* Fundo para cada "card" de linha */
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .div-table-cell {
-    display: flex;
-    /* Para alinhar label e valor */
-    justify-content: space-between;
-    /* Label à esquerda, valor à direita */
-    padding: 8px 10px;
-    border-right: none;
-    border-bottom: 1px dashed #eee;
-    /* Linha entre "campos" */
-    white-space: normal;
-    /* Permite quebra de linha */
-  }
-
-  .div-table-cell:last-child {
-    border-bottom: none;
-  }
-
-  .div-table-cell::before {
-    content: attr(data-label);
-    /* Exibe o rótulo */
-    font-weight: bold;
-    margin-right: 10px;
-    color: #333;
-    flex-shrink: 0;
-    /* Não deixa o label encolher */
-  }
-
-  .div-table-footer .div-table-row {
-    flex-direction: row;
-    /* Mantém rodapé horizontal */
-  }
-
-  .div-table-footer .div-table-cell::before {
-    display: none;
-    /* Não mostra label no rodapé */
-  }
-
-  /* Ajuste para o usuário atual no mobile */
-  .current-user-row {
-    border: 2px solid #34554c !important;
-  }
-
-  .current-user-row .div-table-cell {
-    color: inherit !important;
-    /* Reset a cor para que o before seja visível */
-  }
-
-  .current-user-row .div-table-cell::before {
-    color: #34554c !important;
-  }
-}
-
-
-/* .content-container (reutilize do primeiro exemplo) */
-.content-container {
-  position: relative;
-  padding: 20px;
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
-  min-height: 150px;
-  background-color: #f9f9f9;
-  overflow: hidden;
-  /* Importante para o efeito de rotação/clip */
-}
-
-
-.stamp-message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-15deg);
-  /* Centraliza e rotaciona */
-  padding: 15px 30px;
-  font-size: 3.5em;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.25);
-  /* Cor do texto semi-transparente */
-  border: 5px double rgba(0, 0, 0, 0.25);
-  /* Borda dupla */
-  border-radius: 5px;
-  text-align: center;
-  text-transform: uppercase;
-  /* Tudo em maiúsculas */
-  z-index: 1;
-  /* Fica sobre o conteúdo mas abaixo de outros overlays se houver */
-  user-select: none;
-  /* Impede que o texto seja selecionado */
-  pointer-events: none;
-  /* Permite cliques através da mensagem */
-  opacity: 0.9;
-  /* Opacidade geral */
-}
-
-.stamp-message.error {
-  color: rgba(200, 0, 0, 0.829);
-  border-color: rgb(200, 0, 0);
-}
-
-.stamp-message.approved {
-  color: rgba(0, 128, 0, 0.4);
-  border-color: rgba(0, 128, 0, 0.4);
-  transform: translate(-50%, -50%) rotate(-10deg);
-}
-
-.stamp-message.draft {
-  color: rgba(128, 128, 128, 0.5);
-  border-color: rgba(128, 128, 128, 0.5);
-  font-size: 4em;
-  padding: 20px 40px;
-  transform: translate(-50%, -50%) rotate(10deg);
-}
-
 .container {
-  width: 100%;
-  min-height: 100vh;
+  width: 80%;
+  height: 80%;
   background-color: #e3eed4;
   border-radius: 30px;
   box-shadow: 2px -10px 35px #0f2a1d;
+
   display: grid;
   grid-template-columns: 40% 60%;
   grid-template-rows: 1fr;
   justify-items: center;
-  align-items: baseline;
+  align-items: center;
+
   overflow: hidden;
 }
 
@@ -559,7 +189,7 @@ tfoot {
   width: 100%;
   height: 100%;
   background: url("/static/images/wallpaper.jpg") center / cover no-repeat;
-  border-radius: 30px;
+  border-radius: 0 30px 30px 0;
 
   padding-left: 10%;
   position: relative;
